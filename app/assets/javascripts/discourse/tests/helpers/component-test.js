@@ -80,7 +80,7 @@ export default function (name, opts) {
         instantiate: false,
       });
       const keyValueStore = new KeyValueStore("discourse_");
-      this.registry.register("key-value-store:main", keyValueStore, {
+      this.registry.register("service:key-value-store-main", keyValueStore, {
         instantiate: false,
       });
 
@@ -94,20 +94,10 @@ export default function (name, opts) {
       this.registry.injection("component", "site", "site:main");
       this.registry.injection("component", "session", "session:main");
       this.registry.injection("component", "messageBus", "message-bus:main");
-      this.registry.injection(
-        "component",
-        "keyValueStore",
-        "key-value-store:main"
-      );
 
       this.registry.injection("service", "session", "session:main");
       this.registry.injection("service", "messageBus", "message-bus:main");
       this.registry.injection("service", "siteSettings", "site-settings:main");
-      this.registry.injection(
-        "service",
-        "keyValueStore",
-        "key-value-store:main"
-      );
 
       this.siteSettings = currentSettings();
       store = createStore();
