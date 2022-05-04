@@ -118,16 +118,18 @@ acceptance("Search - Anonymous", function (needs) {
     await visit("/");
 
     await click("#search-button");
-    assert.ok(exists(".search-menu"));
+    assert.dom(".search-menu").exists();
 
     await click(".d-header"); // click outside
-    assert.ok(!exists(".search-menu"));
+    assert.dom(".search-menu").doesNotExist();
 
     await click("#search-button");
-    assert.ok(exists(".search-menu"));
+    assert.dom(".search-menu").exists();
+
+    // It looks like toggleSearchMenu gets called twice. So it gets hidden and reshown.
 
     await click("#search-button"); // toggle same button
-    assert.ok(!exists(".search-menu"));
+    assert.dom(".search-menu").doesNotExist();
   });
 
   test("search scope", async function (assert) {
