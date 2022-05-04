@@ -4,9 +4,13 @@ import { test } from "qunit";
 discourseModule("Unit | Service | screen-track", function () {
   test("consolidateTimings", function (assert) {
     // Stub out the key value store
-    this.registry.register("service:key-value-store", {}, {
-      instantiate: false,
-    });
+    this.registry.register(
+      "service:key-value-store",
+      {},
+      {
+        instantiate: false,
+      }
+    );
 
     const tracker = this.container.lookup("service:screen-track");
 
