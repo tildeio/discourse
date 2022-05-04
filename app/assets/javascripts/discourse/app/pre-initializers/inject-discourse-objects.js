@@ -80,7 +80,7 @@ export default {
     const keyValueStore = new KeyValueStore("discourse_");
     // TODO: Deprecate the old style
     app.register("key-value-store:main", keyValueStore, { instantiate: false });
-    app.register("service:key-value-store-main", keyValueStore, {
+    app.register("service:key-value-store", keyValueStore, {
       instantiate: false,
     });
 

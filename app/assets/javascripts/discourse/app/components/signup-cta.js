@@ -4,7 +4,7 @@ import { on } from "@ember/object/evented";
 import { inject as service } from "@ember/service";
 
 export default Component.extend({
-  keyValueStore: service("key-value-store-main"),
+  keyValueStore: service(),
 
   action: "showCreateAccount",
 

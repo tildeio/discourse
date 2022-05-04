@@ -4,7 +4,7 @@ import { action } from "@ember/object";
 import { inject as service } from "@ember/service";
 
 export default Component.extend({
-  keyValueStore: service("key-value-store-main"),
+  keyValueStore: service(),
 
   hide: false,
 

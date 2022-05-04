@@ -78,7 +78,7 @@ export default function (name, opts) {
         instantiate: false,
       });
       const keyValueStore = new KeyValueStore("discourse_");
-      this.registry.register("service:key-value-store-main", keyValueStore, {
+      this.registry.register("service:key-value-store", keyValueStore, {
         instantiate: false,
       });
 

@@ -95,7 +95,7 @@ export function addPopupMenuOptionsCallback(callback) {
 export default Controller.extend({
   topicController: controller("topic"),
   router: service(),
-  keyValueStore: service("key-value-store-main"),
+  keyValueStore: service(),
 
   checkedMessages: false,
   messageCount: null,
@@ -187,7 +187,7 @@ export default Controller.extend({
   showToolbar: computed({
     get() {
       const keyValueStore = getOwner(this).lookup(
-        "service:key-value-store-main"
+        "service:key-value-store"
       );
       const storedVal = keyValueStore.get("toolbar-enabled");
       if (this._toolbarEnabled === undefined && storedVal === undefined) {
@@ -201,7 +201,7 @@ export default Controller.extend({
     },
     set(key, val) {
       const keyValueStore = getOwner(this).lookup(
-        "service:key-value-store-main"
+        "service:key-value-store"
       );
       this._toolbarEnabled = val;
       keyValueStore.set({

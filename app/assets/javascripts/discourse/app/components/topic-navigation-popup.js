@@ -4,7 +4,7 @@ import discourseComputed from "discourse-common/utils/decorators";
 import { inject as service } from "@ember/service";
 
 export default Component.extend({
-  keyValueStore: service("key-value-store-main"),
+  keyValueStore: service(),
 
   tagName: "",
   popupId: null,

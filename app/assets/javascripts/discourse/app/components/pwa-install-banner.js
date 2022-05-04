@@ -5,7 +5,7 @@ import { inject as service } from "@ember/service";
 const USER_DISMISSED_PROMPT_KEY = "dismissed-pwa-install-banner";
 
 export default Component.extend({
-  keyValueStore: service("key-value-store-main"),
+  keyValueStore: service(),
 
   deferredInstallPromptEvent: null,
 

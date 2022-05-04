@@ -10,7 +10,7 @@ import { readOnly } from "@ember/object/computed";
 const LOGS_NOTICE_KEY = "logs-notice-text";
 
 export default Service.extend({
-  keyValueStore: service("key-value-store-main"),
+  keyValueStore: service(),
 
   text: "",
 
