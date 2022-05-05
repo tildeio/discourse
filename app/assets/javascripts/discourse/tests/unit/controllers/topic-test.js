@@ -26,7 +26,7 @@ discourseModule("Unit | Controller | topic", function (hooks) {
     topic.setProperties({
       selectedPostIds: [],
       selectedPostUsername: null,
-      currentUser: null,
+      // currentUser: null,
     });
   });
 
@@ -279,7 +279,7 @@ discourseModule("Unit | Controller | topic", function (hooks) {
     });
     const controller = this.getController("topic", {
       model,
-      currentUser,
+      // currentUser,
     });
     const selectedPostIds = controller.get("selectedPostIds");
 
@@ -379,7 +379,7 @@ discourseModule("Unit | Controller | topic", function (hooks) {
     model.set("currentUser", { admin: false });
     const controller = this.getController("topic", {
       model,
-      currentUser,
+      // currentUser,
     });
     const selectedPostIds = controller.get("selectedPostIds");
 
@@ -424,7 +424,7 @@ discourseModule("Unit | Controller | topic", function (hooks) {
     model.set("currentUser", { moderator: false });
     const controller = this.getController("topic", {
       model,
-      currentUser,
+      // currentUser,
       siteSettings: {
         moderators_change_post_ownership: true,
       },
