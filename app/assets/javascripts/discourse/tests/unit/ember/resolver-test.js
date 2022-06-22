@@ -307,7 +307,7 @@ module("Unit | Ember | resolver", function (hooks) {
     );
   });
 
-  test("resolves templates with 'admin' prefix to 'admin/templates/' namespace", function (assert) {
+  test("resolves templates with 'admin' prefix", function (assert) {
     setTemplates([
       "admin/templates/foo",
       "adminBar",
@@ -315,6 +315,8 @@ module("Unit | Ember | resolver", function (hooks) {
       "admin.bar",
       "admin/templates/bar",
       "admin/templates/dashboard_general",
+      "admin-baz-qux",
+      "javascripts/admin/plugin-template",
     ]);
 
     // Switches prefix to admin/templates when camelized
@@ -378,6 +380,20 @@ module("Unit | Ember | resolver", function (hooks) {
       "template:admin-dashboard-general",
       "admin/templates/dashboard_general",
       "finds namespaced and underscored version"
+    );
+
+    lookupTemplate(
+      assert,
+      "template:admin-baz/qux",
+      "admin-baz-qux",
+      "also tries dasherized"
+    );
+
+    lookupTemplate(
+      assert,
+      "template:admin-plugin/template",
+      "javascripts/admin/plugin-template",
+      "looks up templates in pluginss"
     );
   });
 
@@ -462,7 +478,7 @@ module("Unit | Ember | resolver", function (hooks) {
   });
 
   test("resolves connector templates", function (assert) {
-    setTemplates(["javascripts/foo"]);
+    setTemplates(["javascripts/foo", "javascripts/connectors/foo-bar/baz_qux"]);
 
     lookupTemplate(
       assert,
@@ -476,6 +492,13 @@ module("Unit | Ember | resolver", function (hooks) {
       "template:connectors/components/foo",
       "javascripts/foo",
       "removes components segment"
+    );
+
+    lookupTemplate(
+      assert,
+      "template:connectors/foo-bar/baz-qux",
+      "javascripts/connectors/foo-bar/baz_qux",
+      "underscores last segment"
     );
 
     // TODO: Test that other normal lookup rules apply

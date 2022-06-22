@@ -94,11 +94,11 @@ export function buildResolver(baseName) {
           // normalize to that eagerly so the normalized versions of the dotted/slashed and
           // dotless/slashless match.
           const dashed = dasherize(split[1].replace(/[\.\/]/g, "-"));
-          const appBase = `${baseName}/${type}s/`;
+
           const adminBase = `admin/${type}s/`;
           const wizardBase = "wizard/" + split[0] + "s/";
           if (
-            requirejs.entries[appBase + dashed] ||
+            lookupModuleBySuffix(`${type}s/${dashed}`) ||
             requirejs.entries[adminBase + dashed] ||
             requirejs.entries[adminBase + dashed.replace(/^admin[-]/, "")] ||
             requirejs.entries[
@@ -181,27 +181,11 @@ export function buildResolver(baseName) {
       return findHelper(parsedName.fullNameWithoutType);
     }
 
+    // If no match is found here, the resolver falls back to `resolveOther`.
     resolveRoute(parsedName) {
       if (parsedName.fullNameWithoutType === "basic") {
         return requirejs("discourse/routes/discourse", null, null, true)
           .default;
-      }
-    }
-
-    findLoadingTemplate(parsedName) {
-      if (parsedName.fullNameWithoutType.match(/loading$/)) {
-        return Ember.TEMPLATES.loading;
-      }
-    }
-
-    findConnectorTemplate(parsedName) {
-      if (parsedName.fullName.startsWith("template:connectors/")) {
-        const connectorParsedName = this.parseName(
-          parsedName.fullName
-            .replace("template:connectors/", "template:javascripts/")
-            .replace("/components", "")
-        );
-        return this.findTemplate(connectorParsedName);
       }
     }
 
@@ -220,11 +204,25 @@ export function buildResolver(baseName) {
       );
     }
 
+    findLoadingTemplate(parsedName) {
+      if (parsedName.fullNameWithoutType.match(/loading$/)) {
+        return Ember.TEMPLATES.loading;
+      }
+    }
+
+    findConnectorTemplate(parsedName) {
+      if (parsedName.fullName.startsWith("template:connectors/")) {
+        const connectorParsedName = this.parseName(
+          parsedName.fullName
+            .replace("template:connectors/", "template:")
+            .replace("components/", "")
+        );
+        return this.findTemplate(connectorParsedName, "javascripts/");
+      }
+    }
+
     findPluginTemplate(parsedName) {
-      const pluginParsedName = this.parseName(
-        parsedName.fullName.replace("template:", "template:javascripts/")
-      );
-      return this.findTemplate(pluginParsedName);
+      return this.findTemplate(parsedName, "javascripts/");
     }
 
     findPluginMobileTemplate(parsedName) {
@@ -241,27 +239,35 @@ export function buildResolver(baseName) {
 
     findMobileTemplate(parsedName) {
       if (_options.mobileView) {
-        let mobileParsedName = this.parseName(
-          parsedName.fullName.replace("template:", "template:mobile/")
-        );
-        return this.findTemplate(mobileParsedName);
+        return this.findTemplate(parsedName, "mobile/");
       }
     }
 
-    findTemplate(parsedName) {
+    findTemplate(parsedName, prefix) {
+      prefix = prefix || "";
+
       const withoutType = parsedName.fullNameWithoutType,
         underscored = decamelize(withoutType).replace(/-/g, "_"),
+        segments = withoutType.split("/"),
         templates = Ember.TEMPLATES;
 
       return (
         // Convert dots and dashes to slashes
-        templates[withoutType.replace(/[\.-]/g, "/")] ||
+        templates[prefix + withoutType.replace(/[\.-]/g, "/")] ||
         // Default unmodified behavior of original resolveTemplate.
-        templates[withoutType] ||
+        templates[prefix + withoutType] ||
         // Underscored without namespace
-        templates[underscored] ||
+        templates[prefix + underscored] ||
         // Underscored with first segment as directory
-        templates[underscored.replace("_", "/")]
+        templates[prefix + underscored.replace("_", "/")] ||
+        // Underscore only the last segment
+        templates[
+          `${prefix}${segments.slice(0, -1).join("/")}/${segments[
+            segments.length - 1
+          ].replace(/-/g, "_")}`
+        ] ||
+        // All dasherized
+        templates[prefix + withoutType.replace(/\//g, "-")]
       );
     }
 
@@ -286,43 +292,17 @@ export function buildResolver(baseName) {
       }
 
       if (namespaced) {
-        let adminParsedName = this.parseName(
-          `template:admin/templates/${namespaced}`
+        let adminParsedName = this.parseName(`template:${namespaced}`);
+        return (
+          // Built-in
+          this.findTemplate(adminParsedName, "admin/templates/") ||
+          // Plugin
+          this.findTemplate(adminParsedName, "javascripts/admin/")
         );
-        return this.findTemplate(adminParsedName);
       }
     }
 
     findWizardTemplate(parsedName) {
-      // let decamelized = decamelize(parsedName.fullNameWithoutType);
-      // if (decamelized.startsWith("components")) {
-      //   let comPath = `wizard/templates/${decamelized}`;
-      //   const compTemplate =
-      //     Ember.TEMPLATES[`javascripts/${comPath}`] || Ember.TEMPLATES[comPath];
-      //   if (compTemplate) {
-      //     return compTemplate;
-      //   }
-      // }
-
-      // if (decamelized === "javascripts/wizard") {
-      //   return Ember.TEMPLATES["wizard/templates/wizard"];
-      // }
-
-      // if (
-      //   decamelized.startsWith("wizard") ||
-      //   decamelized.startsWith("javascripts/wizard")
-      // ) {
-      //   decamelized = decamelized.replace(/^wizard\_/, "wizard/templates/");
-      //   decamelized = decamelized.replace(/^wizard\./, "wizard/templates/");
-      //   decamelized = decamelized.replace(/\./g, "_");
-
-      //   const dashed = decamelized.replace(/_/g, "-");
-      //   return (
-      //     Ember.TEMPLATES[decamelized] ||
-      //     Ember.TEMPLATES[dashed] ||
-      //     Ember.TEMPLATES[dashed.replace("wizard-", "wizard/")]
-      //   );
-      // }
       if (parsedName.fullNameWithoutType === "wizard") {
         return Ember.TEMPLATES["wizard/templates/wizard"];
       }
