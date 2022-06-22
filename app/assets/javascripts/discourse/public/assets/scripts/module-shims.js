@@ -2,11 +2,12 @@ define("I18n", ["exports"], function (exports) {
   return I18n;
 });
 
-define("htmlbars-inline-precompile", ["exports"], function (exports) {
-  exports.default = function tag(strings) {
-    return Ember.Handlebars.compile(strings[0]);
-  };
-});
+// TODO: Completely remove. I don't think we need this.
+// define("htmlbars-inline-precompile", ["exports"], function (exports) {
+//   exports.default = function tag(strings) {
+//     return Ember.Handlebars.compile(strings[0]);
+//   };
+// });
 
 define("ember-addons/ember-computed-decorators", [
   "discourse-common/utils/decorators",

@@ -295,11 +295,17 @@ export default Component.extend({
         "data-islastviewedtopic",
         opts.isLastViewedTopic
       );
+      // TODO: We should remove this listener
       this.element.addEventListener("animationend", () => {
-        this.element.classList.remove("highlighted");
+        this.element?.classList.remove("highlighted");
       });
       if (opts.isLastViewedTopic && this._shouldFocusLastVisited()) {
-        this._titleElement()?.focus();
+        let titleElement = this._titleElement();
+        if (titleElement) {
+          titleElement.focus();
+          // TODO: Figure out why we need to call this
+          this._onTitleFocus();
+        }
       }
     });
   },

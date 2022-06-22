@@ -226,13 +226,7 @@ export function buildResolver(baseName) {
 
     findPluginMobileTemplate(parsedName) {
       if (_options.mobileView) {
-        let pluginParsedName = this.parseName(
-          parsedName.fullName.replace(
-            "template:",
-            "template:javascripts/mobile/"
-          )
-        );
-        return this.findTemplate(pluginParsedName);
+        return this.findTemplate(parsedName, "javascripts/mobile/");
       }
     }
 

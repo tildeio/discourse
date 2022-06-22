@@ -117,14 +117,22 @@ acceptance("Search - Anonymous", function (needs) {
   test("search button toggles search menu", async function (assert) {
     await visit("/");
 
+    console.log("ONE");
+
     await click("#search-button");
     assert.dom(".search-menu").exists();
+
+    console.log("TWO");
 
     await click(".d-header"); // click outside
     assert.dom(".search-menu").doesNotExist();
 
+    console.log("THREE");
+
     await click("#search-button");
     assert.dom(".search-menu").exists();
+
+    console.log("FOUR");
 
     // It looks like toggleSearchMenu gets called twice. So it gets hidden and reshown.
 
