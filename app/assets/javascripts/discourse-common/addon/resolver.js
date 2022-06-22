@@ -132,7 +132,6 @@ export function buildResolver(baseName) {
           }
         );
         if (match) {
-          // This is set up this way in order to fully strip from prod builds.
           deprecated(
             function () {
               let message = `Both ${fullName} and ${match[0]} normalized to the same value: ${normalized}. In the future they will not normalize to the same thing.`;
