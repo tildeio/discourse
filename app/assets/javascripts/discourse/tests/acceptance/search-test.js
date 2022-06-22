@@ -135,6 +135,7 @@ acceptance("Search - Anonymous", function (needs) {
     console.log("FOUR");
 
     // It looks like toggleSearchMenu gets called twice. So it gets hidden and reshown.
+    // This likely has to do with an incorrect call to `mouseDownOutside`.
 
     await click("#search-button"); // toggle same button
     assert.dom(".search-menu").doesNotExist();
