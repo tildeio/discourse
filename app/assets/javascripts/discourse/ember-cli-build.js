@@ -54,6 +54,9 @@ module.exports = function (defaults) {
     tests: true,
   });
 
+  // Import this to allow for runtime compilation
+  app.import("vendor/ember/ember-template-compiler.js");
+
   // Patching a private method is not great, but there's no other way for us to tell
   // Ember CLI that we want the tests alone in a package without helpers/fixtures, since
   // we re-use those in the theme tests.
