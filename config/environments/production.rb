@@ -51,7 +51,7 @@ Discourse::Application.configure do
   config.active_support.deprecation = :notify
 
   # this will cause all handlebars templates to be pre-compiled, making your page faster
-  config.handlebars.precompile = false
+  config.handlebars.precompile = true
 
   # allows developers to use mini profiler
   config.load_mini_profiler = GlobalSetting.load_mini_profiler
