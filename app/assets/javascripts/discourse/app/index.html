@@ -19,6 +19,11 @@
     <bootstrap-content key="discourse-preload-stylesheets">
     {{content-for "discourse-preload-stylesheets"}}
 
+    <!-- TODO: what's up with these? any work arounds? -->
+    <link rel="stylesheet" href="{{rootURL}}assets/vendor.css" />
+    <link rel="stylesheet" href="{{rootURL}}assets/discourse.css" data-embroider-ignore />
+    <!-- END TODO -->
+
     <script defer src="{{rootURL}}assets/vendor.js"></script>
     <script defer src="{{rootURL}}assets/discourse.js"></script>
 
@@ -47,7 +52,7 @@
 
     <bootstrap-content key="hidden-login-form">
 
-    <script defer src="{{rootURL}}assets/start-discourse.js"></script>
+    <script defer src="{{rootURL}}assets/start-discourse.js" data-embroider-ignore></script>
 
     <bootstrap-content key="body-footer">
     {{content-for "body-footer"}}

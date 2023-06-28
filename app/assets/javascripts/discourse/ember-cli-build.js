@@ -1,5 +1,6 @@
 "use strict";
 
+const { Webpack } = require('@embroider/webpack');
 const EmberApp = require("ember-cli/lib/broccoli/ember-app");
 const resolve = require("path").resolve;
 const mergeTrees = require("broccoli-merge-trees");
@@ -96,7 +97,7 @@ module.exports = function (defaults) {
     },
 
     babel: {
-      plugins: [DeprecationSilencer.generateBabelPlugin()],
+      // plugins: [DeprecationSilencer.generateBabelPlugin()],
     },
 
     // We need to build tests in prod for theme tests
@@ -185,30 +186,44 @@ module.exports = function (defaults) {
   const terserPlugin = app.project.findAddonByName("ember-cli-terser");
   const applyTerser = (tree) => terserPlugin.postprocessTree("all", tree);
 
-  return mergeTrees([
-    createI18nTree(discourseRoot, vendorJs),
-    parsePluginClientSettings(discourseRoot, vendorJs, app),
-    app.toTree(),
-    funnel(`${discourseRoot}/public/javascripts`, { destDir: "javascripts" }),
-    funnel(`${vendorJs}/highlightjs`, {
-      files: ["highlight-test-bundle.min.js"],
-      destDir: "assets/highlightjs",
-    }),
-    generateWorkboxTree(),
-    applyTerser(
-      concat(mergeTrees([app.options.adminTree]), {
-        inputFiles: ["**/*.js"],
-        outputFile: `assets/admin.js`,
-      })
-    ),
-    applyTerser(
-      concat(mergeTrees([app.options.wizardTree]), {
-        inputFiles: ["**/*.js"],
-        outputFile: `assets/wizard.js`,
-      })
-    ),
-    applyTerser(prettyTextEngine(app)),
-    generateScriptsTree(app),
-    applyTerser(discoursePluginsTree),
-  ]);
+  return require("@embroider/compat").compatBuild(app, Webpack, {
+    extraPublicTrees: [
+      createI18nTree(discourseRoot, vendorJs),
+      parsePluginClientSettings(discourseRoot, vendorJs, app),
+      funnel(`${discourseRoot}/public/javascripts`, { destDir: "javascripts" }),
+      funnel(`${vendorJs}/highlightjs`, {
+        files: ["highlight-test-bundle.min.js"],
+        destDir: "assets/highlightjs",
+      }),
+      generateScriptsTree(app),
+      applyTerser(discoursePluginsTree),
+    ]
+  });
+
+  // return mergeTrees([
+  //   createI18nTree(discourseRoot, vendorJs),
+  //   parsePluginClientSettings(discourseRoot, vendorJs, app),
+  //   app.toTree(),
+  //   funnel(`${discourseRoot}/public/javascripts`, { destDir: "javascripts" }),
+  //   funnel(`${vendorJs}/highlightjs`, {
+  //     files: ["highlight-test-bundle.min.js"],
+  //     destDir: "assets/highlightjs",
+  //   }),
+  //   generateWorkboxTree(),
+  //   applyTerser(
+  //     concat(mergeTrees([app.options.adminTree]), {
+  //       inputFiles: ["**/*.js"],
+  //       outputFile: `assets/admin.js`,
+  //     })
+  //   ),
+  //   applyTerser(
+  //     concat(mergeTrees([app.options.wizardTree]), {
+  //       inputFiles: ["**/*.js"],
+  //       outputFile: `assets/wizard.js`,
+  //     })
+  //   ),
+  //   applyTerser(prettyTextEngine(app)),
+  //   generateScriptsTree(app),
+  //   applyTerser(discoursePluginsTree),
+  // ]);
 };
